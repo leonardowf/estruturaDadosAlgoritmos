@@ -30,7 +30,7 @@ int main(int arcg, char** argv) {
                 printf("acerto");
 
         } else {
-                printf("erro"); // comment
+                printf("erro"); // comment2
         }
         return EXIT_SUCCESS;
 
