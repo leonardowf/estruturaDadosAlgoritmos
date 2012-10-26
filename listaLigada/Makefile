@@ -10,3 +10,4 @@ clean:
 
 main: main.o listaLigada.o
 main.o: main.c listaLigada.h
+listaLigada.o: listaLigada.c listaLigada.h
