@@ -10,4 +10,3 @@ clean:
 
 main: main.o listaLigada.o
 main.o: main.c listaLigada.h
-redblacktree.o: redblacktree.c redblacktree.h
