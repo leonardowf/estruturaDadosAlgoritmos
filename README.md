@@ -1,4 +1,4 @@
 estruturaDadosAlgoritmos
 ========================
 
-Algumas estruturas de dados e algoritmos implementadas em C
+Algumas estruturas de dados e algoritmos implementadas em C por diversão.
