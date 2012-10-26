@@ -1,54 +1,12 @@
-/*
- ============================================================================
- Name        : listaLigada.c
- Author      : 
- Version     :
- Copyright   : 
- Description : Hello World in C, Ansi-style
- ============================================================================
- */
+        /*
+         * Leonardo Wistuba de França <leonardowistuba@gmail.com>
+         */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct _nodo* Nodo;
-typedef struct _listaLigada* ListaLigada;
-struct _listaLigada {
-        Nodo cabeca;
-        int numeroNodos;
-        void (*imprimir)(ListaLigada l);
-        int (*inserir)(ListaLigada, int, void*);
-};
-struct _nodo {
-        int chave; // para remoção da lista
-        Nodo proximo;
-        void* conteudo;
-};
-
-ListaLigada novaListaLigada();
-void imprimir();
-int inserir(ListaLigada l, int chave, void* conteudo);
-Nodo novoNodo(int chave, void* conteudo);
-
-int main(int argc, char** argv) {
-        ListaLigada l;
-        l = novaListaLigada();
-
-        int chave = 0;
-
-        while (42) {
-                puts("chave: ");
-                scanf("%d", &chave);
-                if (l->inserir(l, chave, NULL)) {
-                        printf("já existe\n");
-                } else {
-                        puts("inserido");
-                }
-        }
-
-        return EXIT_SUCCESS;
-}
+#include "listaLigada.h"
 
 ListaLigada novaListaLigada() {
         ListaLigada l = calloc(1, sizeof(struct _listaLigada));
@@ -59,12 +17,21 @@ ListaLigada novaListaLigada() {
 
         l->imprimir = &imprimir;
         l->inserir = &inserir;
+        l->remover = &remover;
+        l->buscar = &buscar;
 
         return l;
 }
 
-void imprimir() {
-        printf("lulz\n");
+void imprimir(ListaLigada l) {
+        Nodo nodoAtual;
+
+        nodoAtual = l->cabeca;
+        while (nodoAtual != NULL) {
+                printf("%d->", nodoAtual->chave);
+                nodoAtual = nodoAtual->proximo;
+        }
+        printf("\n");
 
 }
 
@@ -108,6 +75,48 @@ Nodo novoNodo(int chave, void* conteudo) {
         novo->chave = chave;
         novo->conteudo = conteudo;
         return novo;
+
+}
+
+int remover(ListaLigada l, int chave) {
+        Nodo nodoAtual = l->cabeca;
+        Nodo libera;
+
+        // quem alocou o l->conteudo que de free, vai que tem mais alguma coisa apontando para lá
+
+        if (l->cabeca == NULL) return EXIT_FAILURE;
+
+        if (l->cabeca->chave == chave) {
+                l->cabeca = l->cabeca->proximo;
+                free(nodoAtual);
+                l->numeroNodos--;
+                return EXIT_SUCCESS;
+        }
+        while (nodoAtual->proximo != NULL) {
+                if (nodoAtual->proximo->chave == chave) {
+                        libera = nodoAtual->proximo;
+                        nodoAtual->proximo = nodoAtual->proximo->proximo;
+                        free(libera);
+                        l->numeroNodos--;
+                        return EXIT_SUCCESS;
+                } else {
+                        nodoAtual = nodoAtual->proximo;
+                }
+        }
+        return EXIT_FAILURE;
+
+}
+
+void* buscar(ListaLigada l, int chave) {
+        Nodo nodoAtual = l->cabeca;
+
+        while (nodoAtual != NULL) {
+                if (nodoAtual->chave == chave) return nodoAtual->conteudo;
+                else
+                        nodoAtual = nodoAtual->proximo;
+
+        }
+        return NULL;
 
 }
 
