@@ -4,7 +4,7 @@
 #include "rubroNegra.h"
 
 /*
- A árvore rubro negra é uma árvore binária que satisfas as seguintes propriedades:
+ Uma árvore rubro negra é uma árvore binária que satisfaz as seguintes propriedades:
  A red-black tree is a binary tree that satisfies the following red-black properties:
  1. Todo nodo é preto ou vermelho.
  1. Every node is either red or black.
