@@ -125,51 +125,165 @@ void arrumarRubroNegra(RubroNegra arvore, Nodo z) {
 
 }
 
-void rotacaoEsquerda (RubroNegra arvore, Nodo x)
-{
+void rotacaoEsquerda(RubroNegra arvore, Nodo x) {
         Nodo y;
         y = x->direita;
-        x ->direita = y->esquerda;
-        if (y->esquerda != nodoNull)
-                y->esquerda->pai = x;
+        x->direita = y->esquerda;
+        if (y->esquerda != nodoNull) y->esquerda->pai = x;
         y->pai = x->pai;
-        if (x->pai == nodoNull)
-                arvore->raiz = y;
-        else if (x == x->pai->esquerda)
-                x->pai->esquerda = y;
+        if (x->pai == nodoNull) arvore->raiz = y;
+        else if (x == x->pai->esquerda) x->pai->esquerda = y;
         else
                 x->pai->direita = y;
         y->esquerda = x;
-        x ->pai = y;
+        x->pai = y;
 }
 
-void rotacaoDireita (RubroNegra arvore, Nodo x)
-{
+void rotacaoDireita(RubroNegra arvore, Nodo x) {
         Nodo y;
         y = x->esquerda;
-        x ->esquerda = y->direita;
-        if (y->direita != nodoNull)
-                y->direita->pai = x;
+        x->esquerda = y->direita;
+        if (y->direita != nodoNull) y->direita->pai = x;
         y->pai = x->pai;
-        if (x->pai == nodoNull)
-                arvore->raiz = y;
-        else if (x == x->pai->direita)
-                x->pai->direita = y;
+        if (x->pai == nodoNull) arvore->raiz = y;
+        else if (x == x->pai->direita) x->pai->direita = y;
         else
                 x->pai->esquerda = y;
         y->direita = x;
-        x ->pai = y;
+        x->pai = y;
 }
 
-void imprimeArvore(Nodo x)
-{
-        if (x == nodoNull)
-                return;
+void imprimeArvore(Nodo x) {
+        if (x == nodoNull) return;
         imprimeArvore(x->esquerda);
         printf("cor: %d, chave: %d\n", x->cor, x->chave);
         imprimeArvore(x->direita);
 
+}
 
+int remover(RubroNegra arvore, int chave) {
+        Nodo z = buscarNodo(arvore->raiz, chave);
+        Nodo justInCase = z;
+        if (z == nodoNull) return 1;
+        else
+                removerRubroNegra(arvore, z);
+        free(justInCase->conteudo);
+        free(justInCase);
+        return 0;
+}
+
+Nodo buscarNodo(Nodo x, int chave) {
+
+        if (x == nodoNull || x->chave == chave) return x;
+        if (chave < x->chave) buscarNodo(x->esquerda, chave);
+        else
+                buscarNodo(x->direita, chave);
+
+}
+
+void removerRubroNegra(RubroNegra T, Nodo z) {
+        Nodo x, y = z;
+        puts("removendo");
+
+        int yCorOriginal = y->cor;
+
+        if (z->esquerda == nodoNull) {
+                x = z->direita;
+                transplanteRubroNegra(T, z, z->direita);
+
+        } else if (z->direita == nodoNull) {
+                x = z->esquerda;
+                transplanteRubroNegra(T, z, z->esquerda);
+        } else {
+                y = arvoreMinima(z->direita);
+                yCorOriginal = y->cor;
+                x = y->direita;
+                if (y->pai == z) x->pai = y;
+                else {
+                        transplanteRubroNegra(T, y, y->direita);
+                        y->direita = z->direita;
+                        y->direita->pai = y;
+                }
+                transplanteRubroNegra(T, z, y);
+                y->esquerda = z->esquerda;
+                y->esquerda->pai = y;
+        }
+        if (yCorOriginal == PRETO) arrumarRubroNegraRemocao(T, x);
+
+}
+
+void arrumarRubroNegraRemocao(RubroNegra T, Nodo x) {
+        Nodo w;
+        while (x != T->raiz && x->cor == PRETO) {
+                if (x == x->pai->esquerda) {
+                        w = x->pai->direita;
+                        if (w->cor == VERMELHO) {
+                                w->cor = PRETO;
+                                x->pai->cor = VERMELHO;
+                                rotacaoEsquerda(T, x->pai);
+                                w = x->pai->direita;
+                        }
+                        if (w->esquerda->cor == PRETO && w->direita->cor == PRETO) {
+                                w->cor = VERMELHO;
+                                x = x->pai;
+                        } else {
+                                if (w->direita->cor == PRETO) {
+                                        w->esquerda->cor = PRETO;
+                                        w->cor = VERMELHO;
+                                        rotacaoDireita(T, w);
+                                        w = x->pai->direita;
+                                }
+                                w->cor = x->pai->cor;
+                                x->pai->cor = PRETO;
+                                w->direita->cor = PRETO;
+                                rotacaoEsquerda(T, x->pai);
+                                x = T->raiz;
+
+                        }
+                } else {
+
+                        w = x->pai->esquerda;
+                        if (w->cor == VERMELHO) {
+                                w->cor = PRETO;
+                                x->pai->cor = VERMELHO;
+                                rotacaoDireita(T, x->pai);
+                                w = x->pai->esquerda;
+                        }
+                        if (w->direita->cor == PRETO && w->esquerda->cor == PRETO) {
+                                w->cor = VERMELHO;
+                                x = x->pai;
+                        } else {
+                                if (w->esquerda->cor == PRETO) {
+                                        w->direita->cor = PRETO;
+                                        w->cor = VERMELHO;
+                                        rotacaoEsquerda(T, w);
+                                        w = x->pai->esquerda;
+                                }
+                                w->cor = x->pai->cor;
+                                x->pai->cor = PRETO;
+                                w->esquerda->cor = PRETO;
+                                rotacaoDireita(T, x->pai);
+                                x = T->raiz;
+
+                        }
+                }
+        }
+        x->cor = PRETO;
+}
+
+void transplanteRubroNegra(RubroNegra T, Nodo u, Nodo v) {
+        if (u->pai == nodoNull) T->raiz = v;
+        else if (u == u->pai->esquerda) u->pai->esquerda = v;
+        else
+                u->pai->direita = v;
+        v->pai = u->pai;
+}
+
+Nodo arvoreMinima(Nodo x) {
+        Nodo y = x;
+        while (y->esquerda != nodoNull)
+                y = y->esquerda;
+        return y;
 
 }
 
