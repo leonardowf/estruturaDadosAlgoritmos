@@ -77,3 +77,4 @@ void usage() {
         printf("p: imprimir árvore.\n");
         printf("d: destruir árvore.\n");
 }
+//test
