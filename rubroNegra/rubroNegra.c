@@ -1,3 +1,7 @@
+/*
+ * Leonardo Wistuba de França <leonardowistuba@gmail.com>
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,7 +37,7 @@ RubroNegra novaRubroNegra() {
         return novaArvore;
 }
 
-Nodo novoNodo(int chave, void* conteudo) {
+static Nodo novoNodo(int chave, void* conteudo) {
         Nodo novo = calloc(1, sizeof(_nodo));
         novo->chave = chave;
         novo->conteudo = conteudo;
@@ -42,13 +46,6 @@ Nodo novoNodo(int chave, void* conteudo) {
         novo->esquerda = nodoNull;
         novo->pai = nodoNull;
         return novo;
-
-}
-
-void DEBUG(char* descricao, int x) {
-        fflush(stdout);
-        fprintf(stdout, "%s: %d\n", descricao, x);
-        fflush(stdout);
 
 }
 
@@ -80,7 +77,7 @@ int inserir(RubroNegra arvore, int chave, void* conteudo) {
 
 }
 
-void arrumarRubroNegra(RubroNegra arvore, Nodo z) {
+static void arrumarRubroNegra(RubroNegra arvore, Nodo z) {
         Nodo y;
         while (z->pai->cor == VERMELHO) {
                 if (z->pai == z->pai->pai->esquerda) {
@@ -126,7 +123,7 @@ void arrumarRubroNegra(RubroNegra arvore, Nodo z) {
 
 }
 
-void rotacaoEsquerda(RubroNegra arvore, Nodo x) {
+static void rotacaoEsquerda(RubroNegra arvore, Nodo x) {
         Nodo y;
         y = x->direita;
         x->direita = y->esquerda;
@@ -140,7 +137,7 @@ void rotacaoEsquerda(RubroNegra arvore, Nodo x) {
         x->pai = y;
 }
 
-void rotacaoDireita(RubroNegra arvore, Nodo x) {
+static void rotacaoDireita(RubroNegra arvore, Nodo x) {
         Nodo y;
         y = x->esquerda;
         x->esquerda = y->direita;
@@ -154,7 +151,7 @@ void rotacaoDireita(RubroNegra arvore, Nodo x) {
         x->pai = y;
 }
 
-void imprimeArvore(Nodo x) {
+static void imprimeArvore(Nodo x) {
         if (x == nodoNull) return;
         imprimeArvore(x->esquerda);
         printf("cor: %d, chave: %d\n", x->cor, x->chave);
@@ -173,7 +170,7 @@ int remover(RubroNegra arvore, int chave) {
         return 0;
 }
 
-Nodo buscarNodo(Nodo x, int chave) {
+static Nodo buscarNodo(Nodo x, int chave) {
 
         if (x == nodoNull || x->chave == chave) return x;
         if (chave < x->chave) buscarNodo(x->esquerda, chave);
@@ -212,7 +209,7 @@ static void removerRubroNegra(RubroNegra T, Nodo z) {
 
 }
 
-void arrumarRubroNegraRemocao(RubroNegra T, Nodo x) {
+static void arrumarRubroNegraRemocao(RubroNegra T, Nodo x) {
         Nodo w;
         while (x != T->raiz && x->cor == PRETO) {
                 if (x == x->pai->esquerda) {
@@ -271,7 +268,7 @@ void arrumarRubroNegraRemocao(RubroNegra T, Nodo x) {
         x->cor = PRETO;
 }
 
-void transplanteRubroNegra(RubroNegra T, Nodo u, Nodo v) {
+static void transplanteRubroNegra(RubroNegra T, Nodo u, Nodo v) {
         if (u->pai == nodoNull) T->raiz = v;
         else if (u == u->pai->esquerda) u->pai->esquerda = v;
         else
@@ -279,7 +276,7 @@ void transplanteRubroNegra(RubroNegra T, Nodo u, Nodo v) {
         v->pai = u->pai;
 }
 
-Nodo arvoreMinima(Nodo x) {
+static Nodo arvoreMinima(Nodo x) {
         Nodo y = x;
         while (y->esquerda != nodoNull)
                 y = y->esquerda;
@@ -293,7 +290,7 @@ void destruir(RubroNegra arvore) {
 
 }
 
-void liberaNodo(Nodo atual) {
+static void liberaNodo(Nodo atual) {
         if (atual == nodoNull) return;
         liberaNodo(atual->esquerda);
         liberaNodo(atual->direita);

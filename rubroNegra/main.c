@@ -1,3 +1,7 @@
+/*
+ * Leonardo Wistuba de França <leonardowistuba@gmail.com>
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
