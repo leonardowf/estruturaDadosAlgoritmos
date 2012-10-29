@@ -20,18 +20,20 @@ struct _rubroNegra {
 static Nodo nodoNull = NULL; // sentinela para facilitar implementação
 
 RubroNegra novaRubroNegra();
-void DEBUG(char* descricao, int x);
 Nodo novoNodo(int chave, void* conteudo);
-void rotacaoDireita (RubroNegra arvore, Nodo x);
-void rotacaoEsquerda (RubroNegra arvore, Nodo x);
+void rotacaoDireita(RubroNegra arvore, Nodo x);
+void rotacaoEsquerda(RubroNegra arvore, Nodo x);
 void arrumarRubroNegra(RubroNegra arvore, Nodo z);
 int inserir(RubroNegra arvore, int chave, void* conteudo);
 void imprimeArvore(Nodo x);
 Nodo arvoreMinima(Nodo x);
 void transplanteRubroNegra(RubroNegra T, Nodo u, Nodo v);
 void arrumarRubroNegraRemocao(RubroNegra T, Nodo x);
-void removerRubroNegra(RubroNegra T, Nodo z);
+static void removerRubroNegra(RubroNegra T, Nodo z);
 Nodo buscarNodo(Nodo x, int chave);
 int remover(RubroNegra arvore, int chave);
-
+void destruir(RubroNegra arvore);
+void liberaNodo(Nodo atual);
+void* buscar(RubroNegra arvore, int chave);
+void imprimir(RubroNegra arvore);
 

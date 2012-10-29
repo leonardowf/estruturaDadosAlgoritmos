@@ -15,7 +15,7 @@
  4. If a node is red, then both its children are black.
  4. Se um nodo é vermelho, então ambos seus filhos são pretos.
  5. For each node, all simple paths from the node to descendant leaves contain the same number of black nodes.
- 5. Para cada nodo, todos os caminhos simples do nodo até as folhas descentes contém o mesmo número de nodos pretos.
+ 5. Para cada nodo, todos os caminhos simples do nodo até as folhas descendentes contém o mesmo número de nodos pretos.
  */
 
 RubroNegra novaRubroNegra() {
@@ -61,6 +61,7 @@ int inserir(RubroNegra arvore, int chave, void* conteudo) {
         x = arvore->raiz;
         while (x != nodoNull) {
                 y = x;
+                if (z->chave == x->chave) return 1;
                 if (z->chave < x->chave) x = x->esquerda;
                 else
                         x = x->direita;
@@ -167,7 +168,7 @@ int remover(RubroNegra arvore, int chave) {
         if (z == nodoNull) return 1;
         else
                 removerRubroNegra(arvore, z);
-        free(justInCase->conteudo);
+        //free(justInCase->conteudo);
         free(justInCase);
         return 0;
 }
@@ -181,9 +182,8 @@ Nodo buscarNodo(Nodo x, int chave) {
 
 }
 
-void removerRubroNegra(RubroNegra T, Nodo z) {
+static void removerRubroNegra(RubroNegra T, Nodo z) {
         Nodo x, y = z;
-        puts("removendo");
 
         int yCorOriginal = y->cor;
 
@@ -285,5 +285,28 @@ Nodo arvoreMinima(Nodo x) {
                 y = y->esquerda;
         return y;
 
+}
+
+void destruir(RubroNegra arvore) {
+        liberaNodo(arvore->raiz);
+        arvore->raiz = nodoNull;
+
+}
+
+void liberaNodo(Nodo atual) {
+        if (atual == nodoNull) return;
+        liberaNodo(atual->esquerda);
+        liberaNodo(atual->direita);
+        free(atual);
+
+}
+
+void* buscar(RubroNegra arvore, int chave) {
+        Nodo resultadoBusca = buscarNodo(arvore->raiz, chave);
+        return resultadoBusca->conteudo;
+}
+
+void imprimir(RubroNegra arvore) {
+        imprimeArvore(arvore->raiz);
 }
 
